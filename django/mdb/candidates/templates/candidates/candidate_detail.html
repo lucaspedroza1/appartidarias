@@ -60,13 +60,15 @@
                     <p>Data nascimento: {{ candidate.birth_date }}</p>
                     <p>Estado civil: {{ candidate.marital_status }}</p>
                     <p>Escolaridade: {{ candidate.education }}</p>
-                    <p>E-mail: {{ candidate.email }}</p>
+                    <p>E-mail: <a href="mailto:{{ candidate.email|lower }}" target="_blank">{{ candidate.email|lower }}</a></p>
                     {% if candidate.twitter %}<p>Twitter: <a href="{{ candidate.twitter }}" target="_blank">{{ candidate.twitter }}</a></p> {% endif %}
                     {% if candidate.facebook %}<p>Facebook: <a href="{{ candidate.facebook }}" target="_blank">{{ candidate.facebook }}</a></p> {% endif %}
                     {% if candidate.instagram %}<p>Instagram: <a href="{{ candidate.instagram }}" target="_blank">{{ candidate.instagram }}</a></p> {% endif %}
                     <p>Ocupação: {{ candidate.job }}</p>
-                    <p>Total bens: {{ candidate.property_value }}</p>
-    
+                    {% if candidate.projects %}<p>Projetos: {{ candidate.projects }}</p> {% endif %}
+
+                    <p>Total bens: R$ {{ candidate.property_value|default_if_none:"0" }}</p>
+
                     <h3 class="section_title"><span>Financiamento</span></h3>
                     <br>
                     <p>Data última atualização: {{ budget.dataUltimaAtualizacaoContas }}</p>

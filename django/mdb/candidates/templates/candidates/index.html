@@ -7,6 +7,8 @@
       </div>
       <div class="col col-12 col-sm-6 col-lg-4 mt-4">
         <h1>Por mais mulheres eleitas no legislativo</h1>
+
+
       </div>
     </div>
   </div>
@@ -16,7 +18,7 @@
 {% extends "base.html" %}
 
 {% block js %}
-<script type="text/javascript" src="/static/assets/js/src/candidate.js"></script>
+<script type="text/javascript" src="/static/assets/js/src/candidate.js?v=1"></script>
 <script type="text/javascript">CandidateHandler($, "{{host}}")</script>
 <script type="text/javascript">
 (function($) {
@@ -32,6 +34,10 @@
         $partido.show();
       }
     });
+
+
+    // CandidateHandler($, "{{host}}")
+
   });
 })(jQuery);
 </script>
@@ -50,6 +56,13 @@
 
           <h2 class="section_title mb-4"><span>Veja as candidaturas femininas deste ano</span></h2>
 
+          <div class="form-group search-group">
+            <input type="text" name="nome" id="nome" class="form-control search-input autocomplete-candidates" placeholder="Buscar por nome da candidata">
+
+            <img src="/static/img/icons/icon-search.png" class="search-button">
+          </div>
+
+          <div class="form-group">OU</div>
           <!-- lista cargo -->
           <div class="form-group">
             <select class="selectpicker form-control" id="cargo">
@@ -144,7 +157,7 @@
           </div>
           <!-- /lista partidos -->
 
-          <!-- lista pauta 
+          <!-- lista pauta
           <div class="form-group">
             <select class="selectpicker form-control" data-live-search="true" id="pauta">
               <option value="">Selecione a Pauta</option>
@@ -154,7 +167,7 @@
 
         </div>
       </div>
-      
+
 
     </div>
   </div><!--/filterbox-->

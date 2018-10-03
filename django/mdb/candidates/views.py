@@ -74,7 +74,8 @@ class CandidateList(APIView):
         page_size = int(query.get('page_size') or settings.PAGE_SIZE)
         page = int(query.get('page') or 1)
 
-        candidates = Candidate.objects.all()
+        candidates = Candidate.objects.all().order_by('name')
+
 
         # filter candiadates
         if 'ano' in query:
@@ -89,6 +90,8 @@ class CandidateList(APIView):
             candidates = candidates.filter(job_role__name=query['cargo'])
         if 'pauta' in query:
             candidates = candidates.filter(agenda__name=query['pauta'])
+        if 'nome' in query:
+            candidates = candidates.filter(name__icontains=query['nome'])
 
         paginated_candidates = candidates[(page-1)*page_size:page*page_size]
         serializer = CandidateSerializer(paginated_candidates, many=True)

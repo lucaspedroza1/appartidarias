@@ -2,7 +2,10 @@ function CandidateHandler($, host) {
 
     this.init = function() {
 
-        var selects = [
+        var fields = [
+            {
+                name: 'nome'
+            },
             {
                 name: 'estado'
             },
@@ -18,21 +21,23 @@ function CandidateHandler($, host) {
             }
         ];
 
-        selects.map(function(select) {
-            this.fetchSelectData(host, select.path, select.name);
+
+        fields.map(function(field) {
+            this.fetchSelectData(host, field.path, field.name);
         });
 
-        selects.map(function(select) {
-            this.onSelectRefresh(select.name, '/api/candidates', selects);
+        fields.map(function(field) {
+            this.onFieldRefresh(field.name, '/api/candidates', fields);
         });
 
-        this.registerLoadMoreCandidates(host + '/api/candidates', selects);
+
+        this.registerLoadMoreCandidates(host + '/api/candidates', fields);
     };
 
-    this.registerLoadMoreCandidates = function(host, selects) {
+    this.registerLoadMoreCandidates = function(host, fields) {
         this.$("#loadMoreCandidates").on('click', function (e) {
             e.preventDefault();
-            this.fetchCandidates(host, selects);
+            this.fetchCandidates(host, fields);
         }.bind(this));
     };
 
@@ -56,12 +61,12 @@ function CandidateHandler($, host) {
     };
 
 
-    this.setInfinityScroll = function(id, host, selects) {
+    this.setInfinityScroll = function(id, host, fields) {
         $(window).scroll(function() {
             if ($(window).scrollTop() >= $(document).height() - $(window).height() - 1000) {
                 if (!this.waitingFetchCandidates) {
                     this.waitingFetchCandidates = true;
-                    this.fetchCandidates(host, selects, this.page);
+                    this.fetchCandidates(host, fields, this.page);
                 }
             }
         });
@@ -85,19 +90,21 @@ function CandidateHandler($, host) {
         this.refreshSelectPicker();
     };
 
-    this.readSelectStates = function(selects){
+    this.readInputStates = function(inputs){
         var query = {};
-        selects.map(function(select) {
-            var value = this.$('#' + select.name).val();
+        inputs.map(function(input) {
+            var value = this.$('#' + input.name).val();
+
             if (value != undefined && value.length > 0) {
-                query[select.name] = value;
+                query[input.name] = value;
             }
         });
         return query;
     };
 
-    this.fetchCandidates = function(host, selects) {
-        var query = this.readSelectStates(selects);
+
+    this.fetchCandidates = function(host, inputs) {
+        var query = this.readInputStates(inputs);
 
         query['ano'] = '2018';
         query['sexo'] = 'F';
@@ -184,12 +191,36 @@ function CandidateHandler($, host) {
         media.append(statusDiv);
     };
 
-    this.onSelectRefresh = function(id, host, selects) {
-        this.$('#'+id).change(function() {
-            this.page = 0;
-            this.clearCandidates();
-            this.fetchCandidates(host, selects);
-        }.bind(this));
+    this.onFieldRefresh = function(id, host, fields) {
+
+        var type = this.$('#'+id).attr('type');
+
+        if(type){
+            this.$('#'+id).next('.search-button').click(function() {
+                this.setCandidate(host, fields)
+            }.bind(this));
+
+            this.$('#'+id).keypress(function(event) {
+                if(event.keyCode === 13){
+                    this.setCandidate(host, fields)
+                }
+            }.bind(this));
+        }
+        else{
+
+
+            this.$('#'+id).change(function() {
+                this.$('#nome').val('');
+                this.setCandidate(host, fields)
+            }.bind(this));
+        }
+
+    };
+
+    this.setCandidate = function(host, fields){
+        this.page = 0;
+        this.clearCandidates();
+        this.fetchCandidates(host, fields);
     };
 
     this.clearCandidates = function() {
