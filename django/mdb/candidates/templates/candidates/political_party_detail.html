@@ -49,6 +49,15 @@
           <h2 class="section_title text-center pt-3"><span>Sobre</span></h2>
           <p class="section_text pt-3">{{ party.about }}</p>
 
+          {% if hasPresident or hasVicePresident or hasGovernor or hasViceGovernor %}
+          <h2 class="section_title text-center pt-3"><span>Candidaturas Majoritárias Femininas</span></h2>
+          <p class="section_text pt-3">
+          {% if hasPresident %}Presidente<br>{% endif %}
+          {% if hasVicePresident %}Vice-Presidente<br>{% endif %}
+          {% if hasGovernor %}Governador<br>{% endif %}
+          {% if hasViceGovernor %}Vice-Governador<br>{% endif %}
+          {% endif %}
+
           <h2 class="section_title text-center pt-3"><span>Espaço às candidaturas<br>femininas no partido</span></h2>
 
           <div class="row">

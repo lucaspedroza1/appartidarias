@@ -234,8 +234,31 @@ class PoliticalPartyTemplate(TemplateView):
         party = self.get_object()
 
         stats = PartyJobRoleStats.objects.filter(political_party=party)
+        majoritaryCandidates = Candidate.objects.values_list('name', 'job_role_id').filter(political_party_id=party.id, job_role_id__in=[1,2,3,4], gender='F')
+        hasPresident = False
+        hasVicePresident = False
+        hasGovernor = False
+        hasViceGovernor = False
+
+        for candidate in majoritaryCandidates:
+
+            if candidate[1] == 1:
+                hasPresident = True
+            if candidate[1] == 2:
+                hasVicePresident = True
+            if candidate[1] == 3:
+                hasGovernor = True
+            if candidate[1] == 4:
+                hasViceGovernor = True
+
+
         charts = StatsSerializer(stats, many=True).data
         charts.append(PartySerializer(party).data)
+
+        context['hasPresident'] = hasPresident
+        context['hasVicePresident'] = hasVicePresident
+        context['hasGovernor'] = hasGovernor
+        context['hasViceGovernor'] = hasViceGovernor
 
         context['party'] = party
         context['party_img'] = party.initials.lower()
